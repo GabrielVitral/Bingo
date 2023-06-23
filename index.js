@@ -1,153 +1,167 @@
-var cartelasContainer = document.getElementById('cartelas');
-var nomeJogadorInput = document.getElementById('nome-jogador');
-var gerarCartelaButton = document.getElementById('gerar-cartela');
-var iniciarJogoButton = document.getElementById('iniciar-jogo');
-var numeroSorteadoDisplay = document.getElementById('numero-sorteado');
-var numerosSorteadosContainer = document.getElementById('numeros-sorteados');
-var vencedoresContainer = document.getElementById('vencedores');
-var cartelas = [];
-var numerosSorteados = [];
-
-gerarCartelaButton.addEventListener('click', gerarCartela);
-iniciarJogoButton.addEventListener('click', iniciarJogo);
-
-function gerarCartela() {
-    var nomeJogador = nomeJogadorInput.value.trim();
-    if (nomeJogador === '') {
-        alert('Por favor, insira um nome para o jogador.');
-        return;
-    }
-
-
-
-    var cartela = criarCartela();
-    cartelas.push({ jogador: nomeJogador, numeros: cartela, venceu: false });
-    exibirCartelas();
-    nomeJogadorInput.value = '';
+:root {
+    --primary--font-family: 'Inter', sans-serif;
+    --second--font-famliy:  'Roboto', sans-serif;
+    --primary--background--color: rgba(48, 26, 129, 0.527); 
+    --second--background--color: rgba(66, 27, 129, 0.301); 
+    --primary--font-size: 3rem; 
 }
 
-function exibirCartelas() {
-    cartelasContainer.innerHTML = '';
+* {
+    padding: 0%;
+    margin: 0%;
+    box-sizing: border-box;
+}
 
-    for (var i = 0; i < cartelas.length; i++) {
-        var cartela = cartelas[i];
-        var cartelaContainer = document.createElement('div');
-        cartelaContainer.classList.add('cartela');
+body {
+    text-align: center;
+    background-color: var(--primary--background--color);
+}
 
-        var nomeJogador = document.createElement('span');
-        nomeJogador.textContent = cartela.jogador;
-        cartelaContainer.appendChild(nomeJogador);
+main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1.041vh;
+    margin: 50px;
+}
 
-        var numerosTable = document.createElement('table');
-        for (var k = 0; k < 5; k++) { // Inverter o loop das colunas
-            var row = document.createElement('tr');
-            for (var j = 0; j < 5; j++) { // Inverter o loop das linhas
-                var cell = document.createElement('td');
-                var numero = document.createElement('div');
-                numero.classList.add('numero');
-                numero.textContent = cartela.numeros[j * 5 + k]; // Inverter o cálculo do índice
-                cell.appendChild(numero);
-                row.appendChild(cell);
-            }
-            numerosTable.appendChild(row);
-        }
-        cartelaContainer.appendChild(numerosTable);
+header {
+    padding: 2vh;
+    background-color: var(--second--background--color);
+    font-family: var(--second--font-famliy);
+    color: white;
+}
 
-        cartelasContainer.appendChild(cartelaContainer);
+.caixa {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(1rem, 2.8vw, 2rem);
+    font-family: Raleway;
+    font-weight: bold;
+  }
+  
+.texto {
+      width: 8.85vh;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 4px solid #212121;
+      animation: cursor 1s step-start infinite, 
+      text 2s steps(8) alternate infinite;
+}
+  
+@keyframes cursor {
+      0%, 100% { 
+      border-color: #212121; 
     }
 }
-
-function iniciarJogo() {
-    if (cartelas.length === 0) {
-        alert('Por favor, gere pelo menos uma cartela para iniciar o jogo.');
-        return;
+  
+@keyframes text {
+      0% { 
+      width: 0; 
     }
-
-    gerarCartelaButton.disabled = true;
-    iniciarJogoButton.disabled = true;
-
-    var intervalId = setInterval(() => {
-        if (cartelas.length === 0) {
-            clearInterval(intervalId);
-            return;
-        }
-
-        var numeroSorteado = sortearNumero();
-        numerosSorteados.push(numeroSorteado);
-        numeroSorteadoDisplay.textContent = numeroSorteado;
-        numerosSorteadosContainer.textContent = numerosSorteados.join(', ');
-        marcarNumeroNasCartelas(numeroSorteado);
-        verificarVencedores();
-
-        if (cartelas.some(cartela => cartela.venceu)) {
-            clearInterval(intervalId);
-            gerarCartelaButton.disabled = false;
-            iniciarJogoButton.disabled = false;
-        }
-    }, 1000);
-}
-
-function criarCartela() {
-    var cartela = [];
-    var colunaB = obterNumerosAleatorios(1, 15, 5);
-    var colunaI = obterNumerosAleatorios(16, 30, 5);
-    var colunaN = obterNumerosAleatorios(31, 45, 5);
-    var colunaG = obterNumerosAleatorios(46, 60, 5);
-    var colunaO = obterNumerosAleatorios(61, 75, 5);
-
-    cartela = cartela.concat(colunaB, colunaI, colunaN, colunaG, colunaO);
-    return cartela;
-}
-
-function obterNumerosAleatorios(min, max, quantidade) {
-    var numeros = new Set();
-    while (numeros.size < quantidade) {
-        var numero = Math.floor(Math.random() * (max - min + 1)) + min;
-        numeros.add(numero);
-    }
-    return Array.from(numeros);
-}
-
-function sortearNumero() {
-    var numerosRestantes = obterNumerosRestantes();
-    var indiceAleatorio = Math.floor(Math.random() * numerosRestantes.length);
-    var numeroSorteado = numerosRestantes[indiceAleatorio];
-    return numeroSorteado;
-}
-
-function obterNumerosRestantes() {
-    var todosNumeros = [];
-    for (var i = 1; i <= 75; i++) {
-        todosNumeros.push(i);
-    }
-    return todosNumeros.filter(numero => !numerosSorteados.includes(numero));
-}
-
-function marcarNumeroNasCartelas(numero) {
-    for (var i = 0; i < cartelas.length; i++) {
-        var cartela = cartelas[i];
-        var numeros = cartela.numeros;
-        var index = numeros.indexOf(numero);
-        if (index !== -1) {
-            var cartelaContainer = cartelasContainer.children[i];
-            var numeroElement = cartelaContainer.querySelectorAll('.numero')[index];
-            numeroElement.classList.add('marcado');
-        }
+      100% { 
+      width: 21.5ch; 
     }
 }
 
-function verificarVencedores() {
-    var vencedores = cartelas.filter(cartela => cartela.numeros.every(numero => numerosSorteados.includes(numero)));
-    vencedoresContainer.innerHTML = '';
+h2 {
+    font-family: var(--primary--font-family);
+    margin-bottom: 20px;
+    font-size: 2.04rem;
+    
+}
 
-    if (vencedores.length > 0) {
-        var vencedoresList = document.createElement('ul');
-        for (var vencedor of vencedores) {
-            var vencedorItem = document.createElement('li');
-            vencedorItem.textContent = vencedor.jogador;
-            vencedoresList.appendChild(vencedorItem);
-            vencedor.venceu = true;
-        }
-        vencedoresContainer.appendChild(vencedoresList);
-    }
+button {
+    min-width: 6.77vh;
+    height: 40px;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    outline: none;
+    border-radius: 20px;
+    border: 2px solid rgba(29, 15, 156, 0.301);
+    background: var(--second--background--color);
+    padding: 10px 20px;
+    margin: 10px;
+}
+
+button:hover {
+    background: #fff;
+    color: var(--primary--background--color)
+} 
+
+
+footer {
+    background-color: var(--second--background--color);
+    padding: 18px;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.card {
+  display: inline-block;
+  width: 288px;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid var(--primary--background--color);
+  text-align: center;
+}
+
+.card-header {
+  font-family: var(--primary--font-family);
+}
+
+.card-numbers {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-gap: 5px;
+  margin: 20px auto;
+  width: 90%;
+}
+
+.bingo-number {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e5e5e5;
+  margin: 5px;
+  line-height: 30px;
+}
+
+.free-space {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: transparent;
+  margin: 5px;
+  line-height: 30px;
+  border: 2px solid black;
+}
+
+.marked {
+  background-color: var(--primary--background--color);
+}
+
+
+#bingo-numbers {
+  position: relative;
+  margin-top: 16%
+}
+
+#message-container {
+  margin-top: 20%;
+  position: static;
+  left: 0;
+  right: 0;
+  color: black;
 }
