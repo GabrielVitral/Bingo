@@ -1,167 +1,205 @@
-:root {
-    --primary--font-family: 'Inter', sans-serif;
-    --second--font-famliy:  'Roboto', sans-serif;
-    --primary--background--color: rgba(48, 26, 129, 0.527); 
-    --second--background--color: rgba(66, 27, 129, 0.301); 
-    --primary--font-size: 3rem; 
+var cards = [];
+var numbers = [];
+var interval;
+
+function createCard() {
+    var cardContainer = document.createElement('div');
+    cardContainer.className = 'card';
+
+    var cardHeader = document.createElement('div');
+    cardHeader.className = 'card-header';
+
+    var cardNumbers = document.createElement('div');
+    cardNumbers.className = 'card-numbers';
+
+    var selectedNumbers = [];
+
+    while (selectedNumbers.length < 24) {
+        var randomNumber = generateRandomNumber();
+        if (!selectedNumbers.includes(randomNumber)) {
+            selectedNumbers.push(randomNumber);
+        }
+    }
+
+    for (var i = 0; i < selectedNumbers.length; i++) {
+        var bingoNumber = document.createElement('div');
+        bingoNumber.className = 'bingo-number';
+        bingoNumber.textContent = selectedNumbers[i];
+        cardNumbers.appendChild(bingoNumber);
+    }
+
+    var freeSpace = document.createElement('div');
+    freeSpace.className = 'free-space';
+    freeSpace.textContent = 'X';
+    cardNumbers.insertBefore(freeSpace, cardNumbers.childNodes[12]);
+
+    cardContainer.appendChild(cardHeader);
+    cardContainer.appendChild(cardNumbers);
+
+    return cardContainer;
 }
 
-* {
-    padding: 0%;
-    margin: 0%;
-    box-sizing: border-box;
+function generateRandomNumber() {
+    return Math.floor(Math.random() * 75) + 1;
 }
 
-body {
-    text-align: center;
-    background-color: var(--primary--background--color);
+function updateBingoNumbers(number) {
+    var bingoNumbersContainer = document.getElementById('bingo-numbers');
+    var bingoNumber = document.createElement('div');
+    bingoNumber.className = 'bingo-number';
+    bingoNumber.textContent = number;
+    bingoNumbersContainer.appendChild(bingoNumber);
 }
 
-main {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 1.041vh;
-    margin: 50px;
-}
+function checkBingo(card) {
+    var cardNumbers = card.querySelectorAll('.bingo-number');
+    var isBingo = true;
 
-header {
-    padding: 2vh;
-    background-color: var(--second--background--color);
-    font-family: var(--second--font-famliy);
-    color: white;
-}
+    for (var i = 0; i < cardNumbers.length; i++) {
+        if (!cardNumbers[i].classList.contains('marked')) {
+            isBingo = false;
+            break;
+        }
+    }
 
-.caixa {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: clamp(1rem, 2.8vw, 2rem);
-    font-family: Raleway;
-    font-weight: bold;
-  }
-  
-.texto {
-      width: 8.85vh;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 4px solid #212121;
-      animation: cursor 1s step-start infinite, 
-      text 2s steps(8) alternate infinite;
-}
-  
-@keyframes cursor {
-      0%, 100% { 
-      border-color: #212121; 
+    if (isBingo) {
+        var cardHeader = card.querySelector('.card-header');
+        var winnerName = cardHeader.textContent;
+
+        clearInterval(interval);
+        disableButtons();
+
+        var winnerElement = document.createElement('h2');
+        winnerElement.textContent = 'Caraca! Parabéns ' + winnerName + '! Você ganhou o bingooooooooooooooooooooooooooo';
+
+        var messageContainer = document.getElementById('message-container');
+        messageContainer.appendChild(winnerElement);
     }
 }
-  
-@keyframes text {
-      0% { 
-      width: 0; 
+
+function markNumber(number) {
+    var cardsContainer = document.getElementById('card-container');
+    var cards = cardsContainer.querySelectorAll('.card');
+
+    for (var i = 0; i < cards.length; i++) {
+        var cardNumbers = cards[i].querySelectorAll('.bingo-number');
+
+        for (var j = 0; j < cardNumbers.length; j++) {
+            if (cardNumbers[j].textContent === number.toString()) {
+                cardNumbers[j].classList.add('marked');
+                checkBingo(cards[i]);
+                break;
+            }
+        }
     }
-      100% { 
-      width: 21.5ch; 
+}
+
+function resetGame() {
+    clearInterval(interval);
+    cards = [];
+    numbers = [];
+    document.getElementById('bingo-numbers').innerHTML = '';
+    document.getElementById('message-container').innerHTML = '';
+    document.getElementById('card-container').innerHTML = '';
+
+    enableButtons();
+}
+
+function enableButtons() {
+    var addCardButton = document.getElementById('add-card-button');
+    var playButton = document.getElementById('play-button');
+    var resetButton = document.getElementById('reset-button');
+
+    addCardButton.disabled = false;
+    playButton.disabled = true;
+    resetButton.disabled = false;
+}
+
+function disableButtons() {
+    var addCardButton = document.getElementById('add-card-button');
+    var playButton = document.getElementById('play-button');
+    var resetButton = document.getElementById('reset-button');
+
+    addCardButton.disabled = true;
+    playButton.disabled = true;
+    resetButton.disabled = false;
+}
+
+function generateUniqueRandomNumber() {
+    var randomNumber;
+    do {
+        randomNumber = generateRandomNumber();
+    } while (numbers.includes(randomNumber));
+
+    numbers.push(randomNumber);
+    return randomNumber;
+}
+
+function checkAllCardsForBingo() {
+    for (var i = 0; i < cards.length; i++) {
+        if (checkBingo(cards[i])) {
+            return true;
+        }
     }
-}
-
-h2 {
-    font-family: var(--primary--font-family);
-    margin-bottom: 20px;
-    font-size: 2.04rem;
-    
-}
-
-button {
-    min-width: 6.77vh;
-    height: 40px;
-    color: #fff;
-    padding: 5px 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    display: inline-block;
-    outline: none;
-    border-radius: 20px;
-    border: 2px solid rgba(29, 15, 156, 0.301);
-    background: var(--second--background--color);
-    padding: 10px 20px;
-    margin: 10px;
-}
-
-button:hover {
-    background: #fff;
-    color: var(--primary--background--color)
-} 
-
-
-footer {
-    background-color: var(--second--background--color);
-    padding: 18px;
-    color: white;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-}
-
-.card {
-  display: inline-block;
-  width: 288px;
-  padding: 10px;
-  margin: 10px;
-  border: 1px solid var(--primary--background--color);
-  text-align: center;
-}
-
-.card-header {
-  font-family: var(--primary--font-family);
-}
-
-.card-numbers {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  grid-gap: 5px;
-  margin: 20px auto;
-  width: 90%;
-}
-
-.bingo-number {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #e5e5e5;
-  margin: 5px;
-  line-height: 30px;
-}
-
-.free-space {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: transparent;
-  margin: 5px;
-  line-height: 30px;
-  border: 2px solid black;
-}
-
-.marked {
-  background-color: var(--primary--background--color);
+    return false;
 }
 
 
-#bingo-numbers {
-  position: relative;
-  margin-top: 16%
-}
+document.getElementById('play-button').addEventListener('click', function () {
+    playGame();
+});
 
-#message-container {
-  margin-top: 20%;
-  position: static;
-  left: 0;
-  right: 0;
-  color: black;
-}
+
+document.getElementById('add-card-button').addEventListener('click', function () {
+    var cardName = prompt('Digite o nome do jogador:');
+    if (!cardName) {
+        return;
+    }
+
+    var cardContainer = createCard();
+    var cardHeader = cardContainer.querySelector('.card-header');
+    cardHeader.textContent = cardName;
+
+    document.getElementById('card-container').appendChild(cardContainer);
+    cards.push(cardContainer);
+
+    if (cards.length >= 2) {
+        var playButton = document.getElementById('play-button');
+        playButton.disabled = false;
+    }
+});
+
+document.getElementById('play-button').addEventListener('click', function () {
+    var addCardButton = document.getElementById('add-card-button');
+    var playButton = document.getElementById('play-button');
+    var resetButton = document.getElementById('reset-button');
+
+    addCardButton.disabled = true;
+    playButton.disabled = true;
+    resetButton.disabled = false;
+
+    interval = setInterval(function () {
+        var randomNumber;
+        do {
+            randomNumber = generateRandomNumber();
+        } while (numbers.includes(randomNumber));
+
+        numbers.push(randomNumber);
+        updateBingoNumbers(randomNumber);
+        markNumber(randomNumber);
+
+        if (numbers.length === 75) {
+            clearInterva + l(interval);
+            disableButtons();
+
+            var messageContainer = document.getElementById('message-container');
+            var noWinnerElement = document.createElement('h1');
+            noWinnerElement.textContent = 'Poxa, ninguém ganhou! :.';
+            messageContainer.appendChild(noWinnerElement);
+        }
+    }, 1000);
+});
+
+document.getElementById('reset-button').addEventListener('click', function () {
+    resetGame();
+});
