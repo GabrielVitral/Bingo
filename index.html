@@ -1,63 +1,37 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bingo</title>
     <link rel="stylesheet" href="index.css">
-
+    <title> Jogo - Bingo </title>
 </head>
-
 <body>
-
     <header>
-        <h1>Bingo
-
-        </h1>
+        <div class="caixa">
+            <div class="texto"> Projeto de bingo </div>
+        </div>
     </header>
+    <main> 
+        <div>
+            <h2>Cartelas</h2>
+            <button id="add-card-button">Adicionar Cartela!</button>
+            <button id="play-button" disabled>Jogar xD</button>
+            <button id="reset-button">Reiniciar o jogo</button>
+            <div id="card-container"></div>
+        </div>
 
-    <main>
-        <div class="colunas">
-            <div class="coluna">
-                <h2>Cartelas:</h2>
-
-                <div>
-                    <label for="nome-jogador">Nome do jogador:</label>
-                    <input type="text" id="nome-jogador" />
-                    <button id="gerar-cartela">Gerar Cartela</button>
-                    <button id="iniciar-jogo">Iniciar Jogo</button>
-                </div>
-                <div id="cartelas"></div>
-            </div>
-            <div class="coluna">
-                <h2>Sorteio</h2>
-                <div>
-                    <label>Número Sorteado:</label>
-                    <span id="numero-sorteado"></span>
-                </div>
-                <div>
-                    <label>Números Sorteados:</label>
-                    <span id="numeros-sorteados"></span>
-                </div>
-                <div class="vencedores">
-                    <h2>Vencedores:</h2>
-                    <div id="vencedores"></div>
-                </div>
-            </div>
+        <div>
+            <h2>Sorteando os números</h2>
+            <div id="bingo-numbers"></div>
+            <div id="message-container"></div>
         </div>
     </main>
 
-
     <footer>
-        <h4>Criado por Gabriel Vitral</h4>
     </footer>
 
-
-    <script src="index.js"></script>
-
+    <script src="index.js">
+    </script>
 </body>
-
-
 
 </html>
