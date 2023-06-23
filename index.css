@@ -1,79 +1,167 @@
-html {
-    scroll-behavior: smooth;
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
+:root {
+    --primary--font-family: 'Inter', sans-serif;
+    --second--font-famliy:  'Roboto', sans-serif;
+    --primary--background--color: rgba(48, 26, 129, 0.527); 
+    --second--background--color: rgba(66, 27, 129, 0.301); 
+    --primary--font-size: 3rem; 
+}
+
+* {
+    padding: 0%;
+    margin: 0%;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: rgb(169, 187, 194);
-    margin: 0;
-    padding: 0;
-    width: 100%;
+    text-align: center;
+    background-color: var(--primary--background--color);
+}
 
+main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1.041vh;
+    margin: 50px;
 }
 
 header {
-    background-color: #221279;
-    color: #fff;
-    padding: 10px;
-    text-align: center;
-    width: 100%;
-}
-
-
-.cartela {
-    border: 1px solid rgb(61, 20, 155);
-    padding: 10px;
-    margin-bottom: 10px;
-    display: inline-block;
-    background-color: white
-}
-
-.row {
-    display: flex;
-}
-
-.numero {
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgb(20, 22, 112);
-    text-align: center;
-    margin: 5px;
-    font-size: 18px;
-}
-
-.marcado {
-    background-color: #182386;
+    padding: 2vh;
+    background-color: var(--second--background--color);
+    font-family: var(--second--font-famliy);
     color: white;
 }
 
-.colunas {
+.caixa {
     display: flex;
-    justify-content: space-between;
-    margin: auto;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(1rem, 2.8vw, 2rem);
+    font-family: Raleway;
+    font-weight: bold;
+  }
+  
+.texto {
+      width: 8.85vh;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 4px solid #212121;
+      animation: cursor 1s step-start infinite, 
+      text 2s steps(8) alternate infinite;
+}
+  
+@keyframes cursor {
+      0%, 100% { 
+      border-color: #212121; 
+    }
+}
+  
+@keyframes text {
+      0% { 
+      width: 0; 
+    }
+      100% { 
+      width: 21.5ch; 
+    }
 }
 
-.coluna {
-    flex-basis: 50%;
-    margin: 50px;
-
+h2 {
+    font-family: var(--primary--font-family);
+    margin-bottom: 20px;
+    font-size: 2.04rem;
+    
 }
 
-.vencedores {
-    margin-top: 400px;
+button {
+    min-width: 6.77vh;
+    height: 40px;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    outline: none;
+    border-radius: 20px;
+    border: 2px solid rgba(29, 15, 156, 0.301);
+    background: var(--second--background--color);
+    padding: 10px 20px;
+    margin: 10px;
 }
+
+button:hover {
+    background: #fff;
+    color: var(--primary--background--color)
+} 
+
 
 footer {
-    position: fixed;
-    bottom: 0px;
-    height: 5vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(27, 25, 128);
+    background-color: var(--second--background--color);
+    padding: 18px;
     color: white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.card {
+  display: inline-block;
+  width: 288px;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid var(--primary--background--color);
+  text-align: center;
+}
+
+.card-header {
+  font-family: var(--primary--font-family);
+}
+
+.card-numbers {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-gap: 5px;
+  margin: 20px auto;
+  width: 90%;
+}
+
+.bingo-number {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e5e5e5;
+  margin: 5px;
+  line-height: 30px;
+}
+
+.free-space {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: transparent;
+  margin: 5px;
+  line-height: 30px;
+  border: 2px solid black;
+}
+
+.marked {
+  background-color: var(--primary--background--color);
+}
+
+
+#bingo-numbers {
+  position: relative;
+  margin-top: 16%
+}
+
+#message-container {
+  margin-top: 20%;
+  position: static;
+  left: 0;
+  right: 0;
+  color: black;
 }
